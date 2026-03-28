@@ -20,7 +20,9 @@ Blogspotの将棋大会スケジュールサイトから首都圏の大会情報
 
 ## タスク
 
-- [ ] `src/scraper/` ディレクトリ作成・依存パッケージ整理（requirements.txt）
+- [ ] `.devcontainer/` セットアップ（Python環境・uv・必要なVS Code拡張の定義）
+- [ ] `pyproject.toml` 作成・依存パッケージ追加（`uv add` で管理）、`uv.lock` をコミット
+- [ ] `src/scraper/` ディレクトリ作成
 - [ ] Blogspotページ構造の解析・パーサー実装
 - [ ] 首都圏フィルタリングロジック実装（都道府県判定）
 - [ ] SQLiteスキーマ設計・マイグレーション実装

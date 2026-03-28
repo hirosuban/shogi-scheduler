@@ -20,24 +20,25 @@ Blogspotの将棋大会スケジュールサイトから首都圏の大会情報
 
 ## タスク
 
-- [ ] `.devcontainer/` セットアップ（Python環境・uv・必要なVS Code拡張の定義）
-- [ ] `pyproject.toml` 作成・依存パッケージ追加（`uv add` で管理）、`uv.lock` をコミット
-- [ ] `src/scraper/` ディレクトリ作成
-- [ ] Blogspotページ構造の解析・パーサー実装
-- [ ] 首都圏フィルタリングロジック実装（都道府県判定）
-- [ ] SQLiteスキーマ設計・マイグレーション実装
+- [x] `.devcontainer/` セットアップ（Python環境・uv・必要なVS Code拡張の定義）
+- [x] `pyproject.toml` 作成・依存パッケージ追加（`uv add` で管理）、`uv.lock` をコミット
+- [x] `src/scraper/` ディレクトリ作成
+- [x] Blogspotページ構造の解析・パーサー実装
+- [x] 首都圏フィルタリングロジック実装（都道府県判定）
+- [x] SQLiteスキーマ設計・マイグレーション実装
   - テーブル: `tournaments`（id, date, name, venue, prefecture, lat, lng, category, source_url）
   - テーブル: `geocode_cache`（venue_name, lat, lng, updated_at）
-- [ ] Nominatimジオコーディング実装（キャッシュ参照 → APIコール → キャッシュ保存）
-- [ ] スクレイピング失敗時のアラート機構（ログ出力 + 構造変化の検出）
-- [ ] APSchedulerによる定期実行設定
-- [ ] ローカルでの動作確認（実データで取得・保存が正常に動くこと）
+- [x] Nominatimジオコーディング実装（キャッシュ参照 → APIコール → キャッシュ保存）
+- [x] スクレイピング失敗時のアラート機構（ログ出力 + 構造変化の検出）
+- [x] APSchedulerによる定期実行設定
+- [x] ローカルでの動作確認（実データで取得・保存が正常に動くこと）
 
 ## 意思決定ログ
 
 - Nominatimはレートリミット（1 req/sec）があるため、`geocode_cache` テーブルで初回以降はAPIコールをスキップする
 - 会場名のジオコーディング精度が低いケースは `geocode_cache` に手動補正フィールドを設けて対応する
 - Seleniumは不要（対象サイトは静的HTML）
+- ページの大会データは `JSON.parse('...')` として静的HTMLに埋め込まれている。BeautifulSoupによるDOM解析は不要で、正規表現でJSON文字列を抽出してパースする方式を採用した（構造変化検知のため `#event_lists` 要素の存在チェックは残す）
 
 ## 完了条件
 

@@ -1,0 +1,12 @@
+[project]
+name = "shogi-scheduler"
+version = "0.1.0"
+description = "首都圏将棋大会スケジュール収集・配信パイプライン"
+requires-python = ">=3.12"
+dependencies = [
+    "apscheduler>=3.11.2",
+    "beautifulsoup4>=4.14.3",
+    "geopy>=2.4.1",
+    "lxml>=6.0.2",
+    "requests>=2.33.0",
+]

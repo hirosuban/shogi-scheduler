@@ -17,18 +17,20 @@ Phase 1が完了し、SQLiteにデータが存在する状態で着手する。
 
 ## タスク
 
-- [ ] `src/api/` ディレクトリ作成・FastAPIプロジェクトセットアップ
-- [ ] SQLiteへの接続・クエリ実装
-- [ ] `GET /tournaments` エンドポイント実装
+- [x] `src/api/` ディレクトリ作成・FastAPIプロジェクトセットアップ
+- [x] SQLiteへの接続・クエリ実装
+- [x] `GET /tournaments` エンドポイント実装
   - クエリパラメータ: `prefecture`（複数指定可）, `from`（日付）, `to`（日付）, `category`
   - レスポンス: JSON配列（id, date, name, venue, prefecture, category）
-- [ ] `GET /tournaments/{id}` エンドポイント実装（大会詳細）
-- [ ] CORSの設定（フロントエンドのオリジンを許可）
-- [ ] ローカルでの動作確認（各パラメータでの絞り込みが正常に動くこと）
+- [x] `GET /tournaments/{id}` エンドポイント実装（大会詳細）
+- [x] CORSの設定（フロントエンドのオリジンを許可）
+- [x] ローカルでの動作確認（各パラメータでの絞り込みが正常に動くこと）
 
 ## 意思決定ログ
 
-<!-- 途中で行った設計判断を記録 -->
+- Phase 1の決定に合わせて `lat/lon`（`lat/lng`）はAPIレスポンス項目から除外した
+- `category` はDB上の保存形式（カンマ区切り文字列）を維持し、APIも文字列として返す
+- CORS許可オリジンは `FRONTEND_ORIGINS` 環境変数で上書き可能にし、ローカル開発用デフォルトを設定した
 
 ## 完了条件
 

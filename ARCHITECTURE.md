@@ -12,6 +12,7 @@
 
 ```
 /
+├── .devcontainer/         # 開発環境定義
 ├── AGENTS.md              # エージェントへのマップ
 ├── ARCHITECTURE.md        # このファイル
 ├── docs/                  # ナレッジベース（記録システム）
@@ -76,6 +77,8 @@ types → config → repository → service → api/runtime → ui
 
 | 領域 | 技術 |
 |---|---|
+| 開発環境 | devcontainer |
+| 依存管理 | uv |
 | フロントエンド | 生HTML + Vanilla JS + Leaflet.js |
 | バックエンド | Python / FastAPI |
 | スクレイピング | requests + BeautifulSoup4 |

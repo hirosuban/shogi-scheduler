@@ -15,6 +15,28 @@
 
 ## 検討した選択肢と決定
 
+### 開発環境: devcontainer
+
+**検討**: uv のみ（ローカル venv）vs devcontainer
+
+**決定**: devcontainer
+
+**理由**:
+- エージェント（Claude Code等）に実装を任せる頻度が高い → コンテナが安全な実行境界になる
+- マシンを変えても環境が一切崩れない
+- GitHub Codespaces にも対応できる
+
+### 依存管理: uv
+
+**検討**: requirements.txt vs uv
+
+**決定**: uv
+
+**理由**:
+- `venv` + `pip` + ロックファイルが1ツールで完結
+- `uv.lock` をコミットすることでコンテナ内外の再現性を保証
+- `requirements.txt` はバージョン固定の管理が手動で漏れやすい
+
 ### フロントエンド: 生HTML + Vanilla JS（Vue.js を不採用）
 
 **検討**: Vue.js 3 vs 生HTML + Vanilla JS

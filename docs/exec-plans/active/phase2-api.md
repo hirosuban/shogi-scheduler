@@ -21,7 +21,7 @@ Phase 1が完了し、SQLiteにデータが存在する状態で着手する。
 - [ ] SQLiteへの接続・クエリ実装
 - [ ] `GET /tournaments` エンドポイント実装
   - クエリパラメータ: `prefecture`（複数指定可）, `from`（日付）, `to`（日付）, `category`
-  - レスポンス: JSON配列（id, date, name, venue, prefecture, lat, lng, category）
+  - レスポンス: JSON配列（id, date, name, venue, prefecture, category）
 - [ ] `GET /tournaments/{id}` エンドポイント実装（大会詳細）
 - [ ] CORSの設定（フロントエンドのオリジンを許可）
 - [ ] ローカルでの動作確認（各パラメータでの絞り込みが正常に動くこと）

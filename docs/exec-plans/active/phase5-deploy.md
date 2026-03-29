@@ -3,6 +3,7 @@
 ## 目標
 
 Phase 4 の実装を Render.com に本番デプロイし、スクレイパーの定期実行を GitHub Actions で動作させる。
+SQLite は Render 上で永続化せず、GitHub Actions で更新した `data/shogi.db` をリポジトリにコミットして配信する。
 
 ## 背景・動機
 
@@ -13,7 +14,7 @@ Phase 4 のコード整理が完了し、デプロイ準備が整った。
 
 - GitHub に main ブランチを最新化
 - Render.com に GitHub リポジトリを連携し、ワンクリックデプロイ
-- GitHub Actions ワークフロー作成（定期トリガー → Render Deploy Hook 呼び出し、またはスクレイパーエンドポイント呼び出し）
+- GitHub Actions ワークフロー作成（定期トリガー → scraper 実行 → `data/shogi.db` をコミット）
 - 本番環境での動作確認
 
 ---
@@ -35,26 +36,14 @@ Phase 4 のコード整理が完了し、デプロイ準備が整った。
   - Environment: `ENVIRONMENT=production` が設定されていることを確認
   - デプロイが完了し、本番 URL（`https://xxxx.onrender.com`）が発行されることを確認
 
-- [ ] **Render の Persistent Disk を設定（SQLite 永続化）**
-  - Service の "Disks" で Persistent Disk を追加
-  - Mount Path を `/var/data` に設定
-  - 容量は最小プランで可（運用開始時は 1GB 目安）
-
-- [ ] **DB パスの環境変数を設定**
-  - Service の Environment Variables に以下を追加
-  - `TOURNAMENT_DB_PATH=/var/data/shogi.db`
-  - これにより再デプロイ・再起動後も DB ファイルを保持できる
-
-- [ ] **Render の Deploy Hook URL を取得**
-  - Render ダッシュボード → 対象サービス → "Settings" → "Deploy Hook" をコピー
-  - 形式: `https://api.render.com/deploy/srv-xxx?key=yyy`
+- [ ] **Render の Auto Deploy を確認**
+  - GitHub 連携済みサービスで Auto Deploy を ON にする
+  - main ブランチ更新時に自動デプロイされることを確認
 
 - [ ] **GitHub Secrets に登録**
   - リポジトリの Settings → Secrets and variables → Actions → "New repository secret"
-  - `RENDER_DEPLOY_HOOK_URL`: 上記でコピーした Deploy Hook URL（Deploy Hook 方式を使う場合のみ）
-  - `RENDER_APP_URL`: 本番 URL（例: `https://xxxx.onrender.com`）
-  - `ADMIN_TOKEN`: Render 側 `ADMIN_TOKEN` と同じ値
-    - GitHub Actions からスクレイパーエンドポイントを叩くために使用
+  - （この方式では必須 secret なし）
+  - 任意: `RENDER_DEPLOY_HOOK_URL`（Auto Deploy を使わない場合のみ）
 
 - [ ] **エージェントに以下を共有する**（作業開始時に伝える）
   - 本番 URL（`https://xxxx.onrender.com`）
@@ -65,15 +54,14 @@ Phase 4 のコード整理が完了し、デプロイ準備が整った。
 
 - [x] `.github/workflows/scraper-schedule.yml` 作成
   - cron: 毎日 JST 9:00（= UTC 00:00）に実行
-  - `POST $RENDER_APP_URL/admin/trigger-scraper?token=$ADMIN_TOKEN` を呼び出し
-  - HTTP ステータスが 2xx でなければ workflow を失敗させる
-  - 成功・失敗をログに記録
+  - GitHub Actions 上で `uv run python -m src.scraper` を実行
+  - `data/shogi.db` が更新されたら main ブランチへ自動コミット
+  - コミットをトリガーに Render 側で自動デプロイ
 
 - [ ] 本番 URL での動作確認（スモークテスト）
   - フロント画面が表示されるか `curl` で確認
   - `/tournaments` が JSON を返すか確認
-  - `/admin/trigger-scraper?token=...` が 200 を返すか確認
-  - scraper 実行後に `/tournaments` が 500 にならないことを確認
+  - GitHub Actions 実行後のデプロイで `/tournaments` が 500 にならないことを確認
 
 - [ ] GitHub Actions の初回手動実行 → ログで成功確認
 
@@ -81,32 +69,32 @@ Phase 4 のコード整理が完了し、デプロイ準備が整った。
 
 - [ ] ブラウザで本番 URL を開き、地図・フィルタが正常に動作することを目視確認
 - [ ] 翌日以降、GitHub Actions の定期実行ログを確認
-- [ ] 本番 DB のデータが更新されていることを確認
+- [ ] 本番 DB（配信中 `data/shogi.db`）のデータが更新されていることを確認
 
 ---
 
 ## 意思決定ログ
 
-- スクレイパー定期実行: Render の Cron Job 機能ではなく GitHub Actions から `POST /admin/trigger-scraper` を呼び出す方式を採用（無料枠の制約回避・ログ可視性のため）
-- Deploy Hook を使う理由: Render API Key よりスコープが限定的でセキュリティリスクが低い
-- DB 構成: SQLite を Render Persistent Disk 上（`/var/data/shogi.db`）で運用し、再起動・再デプロイ時のデータ消失を防ぐ
+- スクレイパー定期実行: Render の Cron Job/Persistent Disk は使わず、GitHub Actions で scraper 実行 + `data/shogi.db` コミット方式を採用（無料運用のため）
+- デプロイ方式: Render は GitHub 連携の Auto Deploy を利用（Deploy Hook は任意）
+- DB 構成: Render インスタンスでは DB を更新せず、ビルド成果物として `data/shogi.db` を同梱して配信する
 
 ## 実施ログ（2026-03-29）
 
 - [x] `.github/workflows/scraper-schedule.yml` を作成
 - [x] 本番 URL を共有済み: `https://shogi-scheduler.onrender.com/`
+- [x] 有料 Persistent Disk を使わない方針に変更
 - [ ] スモークテスト結果
   - `GET /` → `200`
   - `GET /api/tournaments` → `404`（実際の API パスは `/tournaments`）
   - `GET /tournaments` → `500`
   - `POST /admin/trigger-scraper`（token なし）→ `403`
 
-## DB チェックリスト（本番）
+## DB チェックリスト（無料運用）
 
-- [ ] Render 側で Persistent Disk が attach されている
-- [ ] `TOURNAMENT_DB_PATH=/var/data/shogi.db` が設定されている
-- [ ] 初回 `POST /admin/trigger-scraper?token=...` 後に `/var/data/shogi.db` が作成される
-- [ ] 再デプロイ後も `/tournaments` のデータが保持される
+- [ ] GitHub Actions が `data/shogi.db` を更新してコミットできる
+- [ ] Render Auto Deploy により最新コミットが本番へ反映される
+- [ ] 反映後に `/tournaments` が 500 にならず JSON を返す
 
 ## 完了条件
 

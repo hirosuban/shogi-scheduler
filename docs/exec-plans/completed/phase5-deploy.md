@@ -83,7 +83,7 @@ Phase 4 のコード整理が完了し、デプロイ準備が整った。
 ## 実施ログ（2026-03-29）
 
 - [x] `.github/workflows/scraper-schedule.yml` を作成
-- [x] 本番 URL を共有済み: `https://shogi-scheduler.onrender.com/`
+- [x] 本番 URL を共有済み: `https://shogi-tournament.onrender.com/`
 - [x] 有料 Persistent Disk を使わない方針に変更
 - [x] スモークテスト結果
   - `GET /` → `200`

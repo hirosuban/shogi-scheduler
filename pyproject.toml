@@ -1,5 +1,5 @@
 [project]
-name = "shogi-scheduler"
+name = "shogi-tournament"
 version = "0.1.0"
 description = "首都圏将棋大会スケジュール収集・配信パイプライン"
 requires-python = ">=3.12"

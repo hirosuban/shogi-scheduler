@@ -1,5 +1,5 @@
 {
-  "name": "shogi-scheduler",
+  "name": "shogi-tournament",
   "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {}

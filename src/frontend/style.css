@@ -62,6 +62,30 @@ body {
     color: var(--ink-soft);
 }
 
+.site-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 0 32px;
+}
+
+.site-footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--ink-soft);
+    text-decoration: none;
+    opacity: 0.35;
+    transition: opacity 0.2s;
+}
+
+.site-footer a:hover {
+    opacity: 0.8;
+}
+
 .controls {
     margin-top: 16px;
     display: flex;

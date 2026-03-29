@@ -55,15 +55,7 @@ active/ → (完了後) → completed/
 
 ## アクティブプラン
 
-将棋大会スケジュールアプリの実装を4フェーズで進める。
-順序依存あり（前のフェーズ完了後に次フェーズへ）。
-
-| フェーズ | プラン | 概要 |
-|---|---|---|
-| 1 | [`phase1-scraper.md`](./exec-plans/active/phase1-scraper.md) | Blogspotスクレイピング・ジオコーディング・SQLite保存 |
-| 2 | [`phase2-api.md`](./exec-plans/active/phase2-api.md) | FastAPI REST APIの構築 |
-| 3 | [`phase3-frontend.md`](./exec-plans/active/phase3-frontend.md) | 地図UI・日付フィルタ・カードリスト |
-| 4 | [`phase4-deploy.md`](./exec-plans/active/phase4-deploy.md) | 本番デプロイ・仕上げ |
+現在アクティブな実行プランはありません。
 
 ---
 
